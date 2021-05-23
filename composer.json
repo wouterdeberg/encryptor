@@ -1,0 +1,33 @@
+{
+    "name": "flexflux/encryptor",
+    "description": "Package to automatically encrypt and decrypt model attributes in your Laravel project.",
+    "type": "library",
+    "keywords": [
+        "laravel",
+        "encryption",
+        "encrypter",
+        "encryptor",
+        "decryption",
+        "security",
+        "flexflux"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Wouter de Berg",
+            "email": "info@wouterdeberg.nl"
+        }
+    ],
+    "support": {
+        "email": "info@wouterdeberg.nl"
+    },
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "FlexFlux\\Encryptor\\": "src/"
+        }
+    },
+    "require": {
+        "laravel/framework": "~8.12"
+    }
+}
