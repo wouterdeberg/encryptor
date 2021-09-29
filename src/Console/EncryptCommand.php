@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\File;
 
 class EncryptCommand extends Command
 {
-    use Illuminate\Database\Eloquent\Concerns\HasAttributes;
 
     /**
      * The name and signature of the console command.
@@ -39,11 +38,13 @@ class EncryptCommand extends Command
             $data = $model->all();
             foreach ($data as $row) {
                 $row->timestamps = false;
-                foreach ($model->encryptit as $toEncrypt) {
-                    $oldData = $row->$toEncrypt;
-                    $row->$toEncrypt = encrypt($oldData);
+                if ($model->encryptable) {
+                    foreach ($model->encryptable as $encryptable) {
+                        $oldData = $row->$encryptable;
+                        $row->$encryptable = encrypt($oldData);
+                    }
+                    $row->save();
                 }
-                $row->save();
             }
         }
         $this->comment('Database encrypted.');
