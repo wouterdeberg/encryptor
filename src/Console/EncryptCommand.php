@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Container\Container;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 
 class EncryptCommand extends Command
@@ -33,13 +34,14 @@ class EncryptCommand extends Command
     public function handle()
     {
         $this->comment('Encrypting...');
+        DB::beginTransaction();
         foreach($this->getModels() as $model)
         {
-            $data = $model->all();
+            $data = app($model)->all();
             foreach ($data as $row) {
                 $row->timestamps = false;
-                if ($model->encryptable) {
-                    foreach ($model->encryptable as $encryptable) {
+                if (method_exists(app($model), 'getEncryptable') && count(app($model)->getEncryptable()) > 0) {
+                    foreach (app($model)->getEncryptable() as $encryptable) {
                         $oldData = $row->$encryptable;
                         $row->$encryptable = encrypt($oldData);
                     }
@@ -47,6 +49,7 @@ class EncryptCommand extends Command
                 }
             }
         }
+        DB::commit();
         $this->comment('Database encrypted.');
     }
 
