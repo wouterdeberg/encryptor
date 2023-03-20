@@ -20,7 +20,7 @@ composer require flexflux/encryptor
 
 * Step 3: Add the Encryptable trait to your models you want to encrypt.
 ```
-use App\Traits\Encryptable;
+use FlexFlux\Encryptor\Encryptable;
 use Encryptable;
 ```
 
