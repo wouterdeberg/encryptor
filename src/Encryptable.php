@@ -1,8 +1,8 @@
 <?php
 
-
 namespace FlexFlux\Encryptor;
 
+use Illuminate\Contracts\Encryption\DecryptException;
 
 trait Encryptable
 {
@@ -18,8 +18,13 @@ trait Encryptable
     {
         $value = parent::getAttribute($key);
         if (in_array($key, $this->encryptable) && !is_null($value) && $value !== '') {
-            $value = decrypt($value);
+            try {
+                $value = decrypt($value);
+            } catch (DecryptException $exception) {
+                // Ignore exception. Value is not encrypted.
+            }
         }
+        
         return $value;
     }
     /**
@@ -47,7 +52,11 @@ trait Encryptable
         $attributes = parent::attributesToArray();
         foreach ($this->encryptable as $key) {
             if (isset($attributes[$key])) {
-                $attributes[$key] = decrypt($attributes[$key]);
+                try {
+                    $attributes[$key] = decrypt($attributes[$key]);
+                } catch (DecryptException $exception) {
+                    // Ignore exception. Value is not encrypted.
+                }
             }
         }
         return $attributes;
